@@ -1,9 +1,13 @@
-import * as React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image, ScrollView, TextInput, ImageBackground,} from 'react-native';
+import React, {useState} from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput, ImageBackground,} from 'react-native';
 
-export default function Login({ route, navigation }) {
-  const [inputText, setInputText] = React.useState('');
-  const [inputTxt, setInputTxt] = React.useState('');
+export default function Login({ navigation }) {
+  const [formData, setFormData] = useState({email: '', password: ''});
+  const {email, password} = formData
+
+  const formSubmit = () => {
+    //api call
+  }
 
   return (
     <ScrollView>
@@ -35,14 +39,14 @@ export default function Login({ route, navigation }) {
             <TextInput
               style={styles.input}
               placeholder="email"
-              onChangeText={(newText) => setInputText(newText)}
-              value={inputText}
+              onChangeText={(email) => setFormData({...formData, email})}
+              value={email}
             />
             <TextInput
               style={styles.input}
               placeholder="kodi"
-              onChangeText={(newTxt) => setInputTxt(newTxt)}
-              value={inputTxt}
+              onChangeText={(password) => setFormData({...formData, password})}
+              value={password}
               secureTextEntry={true}
             />
           </View>
@@ -58,7 +62,7 @@ export default function Login({ route, navigation }) {
               borderColor: '#b8a691',
               borderWidth: 2,
             }}
-            onPress={() => navigation.navigate('Feed')}>
+            onPress={formSubmit}>
             <Text
               style={{ color: '#85786a', fontWeight: 'bold', fontSize: 17 }}>
               Identifikohu

@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView,} from 'react-native';
 
-export default function Signup({ route, navigation }) {
+export default function Signup({ navigation }) {
   const [myName, setName] = useState('... ');
   const [emailTxt, setemailTxt] = useState('');
   const [passTxt, setpassTxt] = useState('');
@@ -24,18 +24,18 @@ export default function Signup({ route, navigation }) {
           <TextInput
             style={stylesheet.textInput}
             onChangeText={(text) => setemailTxt(text)}
-            placeholder="Emri"
+            placeholder="Emri" value={emailTxt}
           />
           <TextInput
             style={stylesheet.textInput}
             onChangeText={(text) => setName(text)}
-            placeholder="Email"
+            placeholder="Email" value={myName}
           />
           <TextInput
             style={stylesheet.textInput}
             onChangeText={(text) => setpassTxt(text)}
             placeholder="Kodi"
-            secureTextEntry={true}
+            secureTextEntry={true} value={passTxt}
           />
         </View>
 
