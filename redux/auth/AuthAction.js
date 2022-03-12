@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import API from "../../plugins/API"
-import { Auth_Error, Auth_Success, Log_Out, User_Error, User_Loaded } from "../constants"
+import { Auth_Error, Auth_Success, Hide_Loader, Log_Out, Show_Loader, User_Error, User_Loaded } from "../constants"
 import setAuthToken from "../../helper/setAuthToken"
 
 
 export const logInRequest = (nav, payload) => async dispatch => {
+    dispatch({type: Show_Loader})
     try {
         const res = await API.post('/auth/login', payload)
         const {token} = res.data
@@ -14,9 +15,11 @@ export const logInRequest = (nav, payload) => async dispatch => {
     } catch (error) {
         dispatch({type: Auth_Error, payload: error.response.data.message})
     }
+    dispatch({type: Hide_Loader})
 }
 
 export const loadUserRequest = () => async dispatch => {
+    dispatch({type: Hide_Loader})
     try {
         const token = await AsyncStorage.getItem('token')
         if(token) {
@@ -28,6 +31,7 @@ export const loadUserRequest = () => async dispatch => {
     } catch (error) {
         dispatch({type: User_Error})
     }
+    dispatch({type: Show_Loader})
 }
 
 export const logOutRequest = nav => async dispatch => {
