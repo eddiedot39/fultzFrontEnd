@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput, ImageBackground,} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { logInRequest } from '../../redux/auth/AuthAction';
 
 export default function Login({ navigation }) {
   const [formData, setFormData] = useState({email: '', password: ''});
   const {email, password} = formData
+  const dispatch = useDispatch()
+  const {error} = useSelector(state => state.AuthReducer) 
 
-  const formSubmit = () => {
-    //api call
-  }
+  const formSubmit = () => dispatch(logInRequest(navigation, formData))
 
   return (
     <ScrollView>
@@ -35,7 +37,7 @@ export default function Login({ navigation }) {
               {' '}
               Identifikohu{' '}
             </Text>
-
+              <Text style={{color: 'white'}}>{error}</Text>
             <TextInput
               style={styles.input}
               placeholder="email"
@@ -86,7 +88,6 @@ export default function Login({ navigation }) {
                 Nuk ke një profil? Rregjistrohu tani!!{' '}
               </Text>
             </TouchableOpacity>
-            ;
           </View>
         </ImageBackground>
       </View>

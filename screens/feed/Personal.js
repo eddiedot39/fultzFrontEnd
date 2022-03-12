@@ -1,11 +1,12 @@
 import React from "react"
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native"
+import { Button } from "react-native-paper"
+import { useDispatch, useSelector } from "react-redux"
+import { logOutRequest } from "../../redux/auth/AuthAction"
 
 export default ({ navigation }) => {
-  var image_str = ''
-  var bio_str = ''
-  var posti_str = "Posti"
-  var name_str = ''
+  const {name, status} = useSelector(state => state.AuthReducer.user)
+  const dispatch = useDispatch()
 
   return (
     <View
@@ -41,9 +42,9 @@ export default ({ navigation }) => {
           left: 100,
           top: 170
         }}
-        source={{ uri: image_str }}
+        source={{ uri: 'b' }}
       />
-
+      <Button onPress={() => dispatch(logOutRequest(navigation))}>Dil</Button>
       <Text
         style={{
           fontSize: 25,
@@ -52,7 +53,7 @@ export default ({ navigation }) => {
           left: 20,
           top: 290
         }}>
-        {name_str}
+        {name}
       </Text>
 
       <Text style={{
@@ -64,25 +65,13 @@ export default ({ navigation }) => {
         left: 20,
         top: 330
       }}>
-        {posti_str}
+        {status}
       </Text>
 
       <Text
         style={{
-          fontSize: 15,
-          fontWeight: "italic",
-          color: "black",
-          borderRadius: 10,
-          position: "absolute",
-          left: 20,
-          top: 370
-        }}>
-        {bio_str}
-      </Text>
-      <Text
-        style={{
           fontSize: 24,
-          alignContent: "right",
+          alignContent: "flex-start",
           position: "absolute",
           left: 20,
           top: 450

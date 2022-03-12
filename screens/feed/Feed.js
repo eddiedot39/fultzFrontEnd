@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native'
+import { useDispatch } from 'react-redux'
+import { loadUserRequest } from '../../redux/auth/AuthAction'
 export default ({ navigation }) => {
+  const dispatch = useDispatch()
+  useEffect(() => dispatch(loadUserRequest()), [])
     return (
       <View
         style={{
