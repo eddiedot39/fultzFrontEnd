@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loadUserRequest } from '../../redux/auth/AuthAction'
 export default ({ navigation }) => {
   const dispatch = useDispatch()
-  useEffect(() => dispatch(loadUserRequest()), [])
+  const isAuthenticated = useSelector(state => state.AuthReducer.isAuthenticated)
+  useEffect(() => dispatch(loadUserRequest()), [isAuthenticated])
     return (
       <View
         style={{

@@ -18,16 +18,22 @@ const store = createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(t
 AsyncStorage.getItem('token').then(token => token && setAuthToken(token))
 
 
-export default function App() {
+export default () => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
+      <App/>
+    </Provider>
+  );
+} 
+
+const App = () => {
+  return (
+    <NavigationContainer>
         <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen name='Feed' component={Feed}/>
           <Tab.Screen name="Login" component={Login}/>
           <Tab.Screen name="Signup" component={Signup} />
         </Tab.Navigator>
       </NavigationContainer>
-    </Provider>
-  );
-} 
+  )
+}

@@ -5,8 +5,8 @@ import setAuthToken from "../../helper/setAuthToken"
 
 
 export const logInRequest = (nav, payload) => async dispatch => {
-    dispatch({type: Show_Loader})
     try {
+        dispatch({type: Show_Loader})
         const res = await API.post('/auth/login', payload)
         const {token} = res.data
         await AsyncStorage.setItem('token', token)
@@ -19,8 +19,8 @@ export const logInRequest = (nav, payload) => async dispatch => {
 }
 
 export const loadUserRequest = () => async dispatch => {
-    dispatch({type: Hide_Loader})
     try {
+        dispatch({type: Show_Loader})
         const token = await AsyncStorage.getItem('token')
         if(token) {
             setAuthToken(token)
