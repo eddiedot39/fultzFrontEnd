@@ -31,7 +31,7 @@ export const loadUserRequest = () => async dispatch => {
     } catch (error) {
         dispatch({type: User_Error})
     }
-    dispatch({type: Show_Loader})
+    dispatch({type: Hide_Loader})
 }
 
 export const logOutRequest = nav => async dispatch => {

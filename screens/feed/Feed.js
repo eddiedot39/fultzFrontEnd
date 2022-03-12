@@ -2,10 +2,16 @@ import React, { useEffect } from 'react'
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadUserRequest } from '../../redux/auth/AuthAction'
+import { getAllPostsRequest } from '../../redux/post/PostAction'
 export default ({ navigation }) => {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector(state => state.AuthReducer.isAuthenticated)
-  useEffect(() => dispatch(loadUserRequest()), [isAuthenticated])
+  const posts = useSelector(state => state.PostReducer.posts)
+  useEffect(() => {
+    dispatch(loadUserRequest())
+    dispatch(getAllPostsRequest())
+  }, [])
+
     return (
       <View
         style={{
@@ -25,6 +31,11 @@ export default ({ navigation }) => {
           {' '}
           Feed{' '}
         </Text>
+        {posts.length ? (
+          <></>
+        ) :
+          <Text>No Post found</Text>
+        }
         <TouchableOpacity
           style={styles.nav}
           onPress={() => navigation.toggleDrawer()}>

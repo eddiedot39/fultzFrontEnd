@@ -1,4 +1,5 @@
 import React from 'react';
+import {StyleSheet} from 'react-native'
 import {NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './screens/auth/login';
@@ -7,10 +8,12 @@ import Feed from './screens/feed/index'
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import setAuthToken from './helper/setAuthToken';
 import rootReducer from './redux/rootReducer';
+import Spinner from 'react-native-loading-spinner-overlay'
+import { ActivityIndicator } from 'react-native-paper';
 
 const Tab = createStackNavigator();
 
@@ -27,8 +30,11 @@ export default () => {
 } 
 
 const App = () => {
+  const loading = useSelector(state => state.LoaderReducer)
   return (
     <NavigationContainer>
+        <Spinner visible={loading} customIndicator={<ActivityIndicator size='large' color='white'/>}
+          textContent='Loading...' textStyle={styles.loaderText}/>
         <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen name='Feed' component={Feed}/>
           <Tab.Screen name="Login" component={Login}/>
@@ -37,3 +43,9 @@ const App = () => {
       </NavigationContainer>
   )
 }
+
+const styles = StyleSheet.create({
+  loaderText: {
+    color: 'white'
+  },
+})
