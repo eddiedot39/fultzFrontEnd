@@ -1,4 +1,4 @@
-import { Auth_Error, Auth_Success, Log_Out, User_Error, User_Loaded, User_Update } from "../constants";
+import { Auth_Error, Auth_Success, Error_Timeout, Log_Out, User_Error, User_Loaded, User_Update } from "../constants";
 
 const initialState = {
     user: {},
@@ -21,6 +21,8 @@ export default (state = initialState, action) => {
         case User_Error:
         case Log_Out:
             return initialState
+        case Error_Timeout:
+            return {...state, error: ''}
         default:
             return state
     }

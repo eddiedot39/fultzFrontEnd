@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import API from "../../plugins/API"
-import { Auth_Error, Auth_Success, Hide_Loader, Log_Out, User_Update, User_Error, User_Loaded } from "../constants"
+import { Auth_Error, Auth_Success, Hide_Loader, Log_Out, User_Update, User_Error, User_Loaded, Error_Timeout } from "../constants"
 import setAuthToken from "../../helper/setAuthToken"
 
 
@@ -14,6 +14,7 @@ export const logInRequest = (nav, payload) => async dispatch => {
         await dispatch(loadUserRequest())
     } catch (error) {
         dispatch({type: Auth_Error, payload: error.response.data.message})
+        setTimeout(() => dispatch({type: Error_Timeout}), 2000)
     }
 }
 
