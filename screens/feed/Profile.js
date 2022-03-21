@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { logOutRequest } from "../../redux/auth/AuthAction"
 
 export default ({ navigation }) => {
-  const {name, status} = useSelector(state => state.AuthReducer.user)
+  const {name, status, profilePhoto} = useSelector(state => state.AuthReducer.user)
   const dispatch = useDispatch()
 
   return (
@@ -42,7 +42,7 @@ export default ({ navigation }) => {
           left: 100,
           top: 170
         }}
-        source={{ uri: 'b' }}
+        source={{ uri: profilePhoto }}
       />
       <Button onPress={() => dispatch(logOutRequest(navigation))}>Dil</Button>
       <Text

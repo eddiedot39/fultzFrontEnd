@@ -5,6 +5,7 @@ import { getAllPostsRequest } from '../../redux/post/PostAction'
 export default ({ navigation }) => {
   const dispatch = useDispatch()
   const posts = useSelector(state => state.PostReducer.posts)
+
   useEffect(() => {
     dispatch(getAllPostsRequest())
   }, [])
@@ -28,9 +29,9 @@ export default ({ navigation }) => {
           {' '}
           Feed{' '}
         </Text>
-        {posts.length ? (
-          <></>
-        ) :
+        {posts.length ? posts.map((post, index) => (
+          <Text key={index}>{post.body}</Text>
+        )) :
           <Text>No Post found</Text>
         }
         <TouchableOpacity

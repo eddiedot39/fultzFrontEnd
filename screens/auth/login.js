@@ -1,15 +1,13 @@
 import React, {useState} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput, ImageBackground,} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { logInRequest } from '../../redux/auth/AuthAction';
+import {logInRequest } from '../../redux/auth/AuthAction';
 
 export default function Login({ navigation }) {
   const [formData, setFormData] = useState({email: '', password: ''});
   const {email, password} = formData
   const dispatch = useDispatch()
-  const {error} = useSelector(state => state.AuthReducer) 
-
-  const formSubmit = () => dispatch(logInRequest(navigation, formData))
+  const {error, isAuthenticated} = useSelector(state => state.AuthReducer) 
 
   return (
     <ScrollView>
@@ -64,7 +62,7 @@ export default function Login({ navigation }) {
               borderColor: '#b8a691',
               borderWidth: 2,
             }}
-            onPress={formSubmit}>
+            onPress={() => dispatch(logInRequest(navigation, formData))}>
             <Text
               style={{ color: '#85786a', fontWeight: 'bold', fontSize: 17 }}>
               Identifikohu

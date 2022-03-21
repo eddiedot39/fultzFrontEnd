@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView,} from 'react-native';
 
 export default function Signup({ navigation }) {

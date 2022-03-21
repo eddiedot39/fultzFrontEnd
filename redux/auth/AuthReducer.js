@@ -1,4 +1,4 @@
-import { Auth_Error, Auth_Success, Log_Out, User_Error, User_Loaded } from "../constants";
+import { Auth_Error, Auth_Success, Log_Out, User_Error, User_Loaded, User_Update } from "../constants";
 
 const initialState = {
     user: {},
@@ -15,7 +15,8 @@ export default (state = initialState, action) => {
             return {...state, token: payload, isAuthenticated: true, error: ''}
         case Auth_Error:
             return {...state, error: payload, isAuthenticated: false}
-        case User_Loaded: 
+        case User_Loaded:
+        case User_Update:
             return {...state, user: payload}
         case User_Error:
         case Log_Out:

@@ -5,7 +5,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import Personal from './Personal';
+import Profile from './Profile';
 import Settings from './Settings';
 import Feed from './Feed';
 import Login from '../auth/login';
@@ -35,7 +35,7 @@ function MyDrawer() {
         <Drawer.Screen name="Feed" component={Feed} />
         {isAuthenticated ? (
           <>
-            <Drawer.Screen name="Llogaria ime" component={Personal} />
+            <Drawer.Screen name="Llogaria ime" component={Profile} />
             <Drawer.Screen name="Ndrysho" component={Settings} />
           </>
         ): (

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import {StyleSheet} from 'react-native'
 import {NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './screens/auth/login';
@@ -12,15 +11,18 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import setAuthToken from './helper/setAuthToken';
 import rootReducer from './redux/rootReducer';
-import Spinner from 'react-native-loading-spinner-overlay'
-import { ActivityIndicator } from 'react-native-paper';
+import API from './plugins/API';
+import { Show_Loader, Hide_Loader } from './redux/constants';
 import { loadUserRequest } from './redux/auth/AuthAction';
+import { StyleSheet, View } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+
+
 
 const Tab = createStackNavigator();
 
 const store = createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(thunk)))
 AsyncStorage.getItem('token').then(token => token && setAuthToken(token))
-
 
 export default () => {
   return (
@@ -31,25 +33,40 @@ export default () => {
 } 
 
 const App = () => {
+  const dispatch = useDispatch()
   const loading = useSelector(state => state.LoaderReducer)
   const isAuthenticated = useSelector(state => state.AuthReducer.isAuthenticated)
-  const dispatch = useDispatch()
-  useEffect(() => dispatch(loadUserRequest()), [isAuthenticated])
+
+  API.interceptors.request.use(req => {
+    dispatch({type: Show_Loader})
+    return req
+  })
+
+  API.interceptors.response.use(res => {
+    dispatch({type: Hide_Loader})
+    return res;
+  }, err => {
+    dispatch({type: Hide_Loader})
+    return Promise.reject(err)
+  })
+
+  useEffect(()=> {
+    dispatch(loadUserRequest())
+  }, [])
+
   return (
-    <NavigationContainer>
-        <Spinner visible={loading} customIndicator={<ActivityIndicator size='large' color='white'/>}
-          textContent='Loading...' textStyle={styles.loaderText}/>
+      <NavigationContainer>
+        <Spinner textContent='Loading' visible={loading} />
         <Tab.Navigator screenOptions={{ headerShown: false }}>
-          <Tab.Screen name='Feed' component={Feed}/>
-          <Tab.Screen name="Login" component={Login}/>
-          <Tab.Screen name="Signup" component={Signup} />
+          {isAuthenticated ? (
+            <Tab.Screen name='Feed' component={Feed}/>
+          ) : (
+            <>
+              <Tab.Screen name="Login" component={Login}/>
+              <Tab.Screen name="Signup" component={Signup} />
+            </>
+          )}
         </Tab.Navigator>
       </NavigationContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  loaderText: {
-    color: 'white'
-  },
-})

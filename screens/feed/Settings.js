@@ -1,35 +1,31 @@
 import React, {useState} from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { editUserRequest } from '../../redux/auth/AuthAction';
 
 export default ({ navigation }) => {
-    const [defaultImageUri, newDefaultImageUri] = useState('');
-    const [newBio, setNewBio] = useState('');
-    const [newName, setNewName] = useState('');
-    const [newPosti, setNewPosti] = useState('');
-    const [image, setImage] = useState(
-      'https://az-pe.com/wp-content/uploads/2018/05/kemptons-blank-profile-picture.jpg'
-    );
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.AuthReducer.user)
+  const {name, email, status, profilePhoto} = user
+  const [formData, setFormData] = useState({name, email, status, profilePhoto})
+   
   
-    const pickImage = async () => {
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  
-      if (!permissionResult.granted) {
-        alert(
-          'Sorry, we need your permission in order to access the camera roll'
-        );
-        return;
-      }
-  
-      const mediaResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-      });
-  
-      if (!mediaResult.cancelled) {
-        setImage(mediaResult.uri);
-        newDefaultImageUri(mediaResult.uri);
-      }
-    };
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      alert('Sorry, we need your permission in order to access the camera roll');
+      return;
+    }
+
+    const mediaResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    });
+
+    !mediaResult.cancelled && setFormData({...formData, profilePhoto: mediaResult.uri})
+        
+  };
     return (
       <View style={{
         flex: 1,
@@ -61,43 +57,41 @@ export default ({ navigation }) => {
         <TouchableOpacity style={styles.button} onPress={pickImage}>
           <Text>Zgjidh foton</Text>
         </TouchableOpacity>
-        <Image style={styles.image} source={{ uri: image }} />
+        <Image style={styles.image} source={{ uri: formData.profilePhoto }} />
+
         <Text style={{ fontSize: 17, marginTop: 30 }}>
-          Vendos nje emer te ri
+          Ndrysho emrin
         </Text>
         <TextInput
           style={styles.textInput}
           placeholder="Emri"
-          onChangeText={(text) => setNewName(text)}
-          value={newName}
+          onChangeText={(name) => setFormData({...formData, name})}
+          value={formData.name}
         />
+
         <Text style={{ fontSize: 17, marginTop: 30 }}>
-          Vendos postin
+          Ndrysho emailin
+        </Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Email"
+          onChangeText={(email) => setFormData({...formData, email})}
+          value={formData.email}
+        />
+
+        <Text style={{ fontSize: 17, marginTop: 30 }}>
+          Ndrysho postin
         </Text>
         <TextInput
           style={styles.textInput}
           placeholder="Posti"
-          onChangeText={(text) => setNewPosti(text)}
-          value={newPosti}
-        />
-        <Text style={{ fontSize: 17 }}>Type in your contact info</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Numer kontakti"
-          onChangeText={(text) => setNewBio(text)}
-          value={newBio}
+          onChangeText={(status) => setFormData({...formData, status})}
+          value={formData.status}
         />
   
         <TouchableOpacity
           style={styles.button}
-          onPress={() =>
-            navigation.navigate('Llogaria ime', {
-              bio: newBio,
-              image: image,
-              name: newName,
-              posti: newPosti,
-            })
-          }>
+          onPress={() => dispatch(editUserRequest(navigation, formData))}>
           <Text
             style={{ fontSize: 20,  marginTop: 6 }}>
             {' '}
@@ -108,13 +102,6 @@ export default ({ navigation }) => {
     );
 }
 const styles = StyleSheet.create({
-  viewStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-  },
-
   button: {
     alignItems: 'center',
     padding: 12,
