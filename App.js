@@ -50,9 +50,7 @@ const App = () => {
     return Promise.reject(err)
   })
 
-  useEffect(()=> {
-    dispatch(loadUserRequest())
-  }, [])
+  useEffect(() => dispatch(loadUserRequest()), [])
 
   return (
       <NavigationContainer>

@@ -1,12 +1,18 @@
-import React from "react"
+import React, { useEffect, Fragment } from "react"
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native"
 import { Button } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux"
 import { logOutRequest } from "../../redux/auth/AuthAction"
+import { getUserPosts } from "../../redux/post/PostAction"
 
 export default ({ navigation }) => {
   const {name, status, profilePhoto} = useSelector(state => state.AuthReducer.user)
   const dispatch = useDispatch()
+  const posts = useSelector(state => state.PostReducer.userPosts)
+
+  useEffect(() => {
+    dispatch(getUserPosts())
+  }, [])
 
   return (
     <View
@@ -44,7 +50,7 @@ export default ({ navigation }) => {
         }}
         source={{ uri: profilePhoto }}
       />
-      <Button onPress={() => dispatch(logOutRequest(navigation))}>Dil</Button>
+      <Button onPress={() => dispatch(logOutRequest())}>Dil</Button>
       <Text
         style={{
           fontSize: 25,
@@ -77,6 +83,9 @@ export default ({ navigation }) => {
           top: 450
         }}>
         Njoftimet e mia:{" "}
+        {posts.length ? posts.map((post, index) => (
+          <Text key={index}>{`${post.body} `}</Text>
+        )) : <Text>No Posts Found</Text>}
       </Text>
     </View>
   )

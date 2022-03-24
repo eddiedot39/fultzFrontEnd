@@ -1,16 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import API from "../../plugins/API"
-import { Auth_Error, Auth_Success, Hide_Loader, Log_Out, User_Update, User_Error, User_Loaded, Error_Timeout } from "../constants"
+import { Auth_Error, Auth_Success, Log_Out, User_Update, User_Error, User_Loaded, Error_Timeout } from "../constants"
 import setAuthToken from "../../helper/setAuthToken"
 
 
-export const logInRequest = (nav, payload) => async dispatch => {
+export const logInRequest = (payload) => async dispatch => {
     try {
         const res = await API.post('/auth/login', payload)
         const {token} = res.data
         await AsyncStorage.setItem('token', token)
         dispatch({type: Auth_Success, payload: token})
-        nav.navigate('Feed')
         await dispatch(loadUserRequest())
     } catch (error) {
         dispatch({type: Auth_Error, payload: error.response.data.message})
@@ -32,17 +31,16 @@ export const loadUserRequest = () => async dispatch => {
     }
 }
 
-export const logOutRequest = nav => async dispatch => {
+export const logOutRequest = () => async dispatch => {
     await AsyncStorage.removeItem('token')
     dispatch({type: Log_Out})
-    nav.navigate('Login')
 }
 
 export const editUserRequest = (nav, formData) => async dispatch => {
     try {
         const res = await API.put('/user', formData)
         dispatch({type: User_Update, payload: res.data})
-        nav.navigate('Profile')
+        nav.navigate('Llogaria ime')
     } catch (error) {
         console.log(error.response)
     }

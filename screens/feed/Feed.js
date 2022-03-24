@@ -30,7 +30,9 @@ export default ({ navigation }) => {
           Feed{' '}
         </Text>
         {posts.length ? posts.map((post, index) => (
-          <Text key={index}>{post.body}</Text>
+          <TouchableOpacity key={index}>
+            <Text>{post.body}</Text>
+          </TouchableOpacity>
         )) :
           <Text>No Post found</Text>
         }

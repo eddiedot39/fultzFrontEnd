@@ -1,8 +1,9 @@
-import { Get_Post, Get_Posts, Post_Error } from "../constants";
+import { Get_Post, Get_Posts, Get_User_Posts, Post_Error } from "../constants";
 
 const initialState = {
     post: {},
     posts: [],
+    userPosts: [],
     error: ''
 }
 
@@ -11,6 +12,8 @@ export default (state = initialState, action) => {
     switch (type) {
         case Get_Posts:
             return {...state, posts: payload}
+        case Get_User_Posts:
+            return {...state, userPosts: payload}
         case Get_Post:
             return {...state, post: payload}
         case Post_Error:

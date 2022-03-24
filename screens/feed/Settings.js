@@ -3,29 +3,49 @@ import * as ImagePicker from 'expo-image-picker';
 import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { editUserRequest } from '../../redux/auth/AuthAction';
+import {Button } from 'react-native-paper'
 
 export default ({ navigation }) => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.AuthReducer.user)
   const {name, email, status, profilePhoto} = user
-  const [formData, setFormData] = useState({name, email, status, profilePhoto})
+  const [formData, setFormData] = useState({name, email, status, profilePhoto, password: ''})
+  const [password2, setPassword2] = useState('')
    
-  
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const openImageLibrary = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (!permissionResult.granted) {
-      alert('Sorry, we need your permission in order to access the camera roll');
-      return;
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
     }
 
-    const mediaResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
+    if (status === 'granted') {
+      const res = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+      });
 
-    !mediaResult.cancelled && setFormData({...formData, profilePhoto: mediaResult.uri})
-        
+      setFormData({...formData, profilePhoto: res.uri})
+    }
   };
+
+  const uploadImage = async() => {
+    const form = new FormData();
+      form.append('profile', {
+        name: new Date() + '_profile',
+        uri: formData.profilePhoto,
+        type: 'image/jpg',
+      });
+    //api call
+  }
+  
+  const handleSubmit = () => {
+    if(password2 && password2 === formData.password)
+      dispatch(editUserRequest(navigation, formData))
+    else
+      alert('Kodet nuk perputhen')
+  }
+  
     return (
       <View style={{
         flex: 1,
@@ -54,11 +74,11 @@ export default ({ navigation }) => {
           |----------------------------------------------|{' '}
         </Text>
         <Text style={{ fontSize: 17 }}> Foto profili </Text>
-        <TouchableOpacity style={styles.button} onPress={pickImage}>
+        <TouchableOpacity style={styles.button} onPress={openImageLibrary}>
           <Text>Zgjidh foton</Text>
         </TouchableOpacity>
         <Image style={styles.image} source={{ uri: formData.profilePhoto }} />
-
+        {profilePhoto !== formData.profilePhoto ? <Button>Ndrysho</Button> : null}
         <Text style={{ fontSize: 17, marginTop: 30 }}>
           Ndrysho emrin
         </Text>
@@ -88,10 +108,29 @@ export default ({ navigation }) => {
           onChangeText={(status) => setFormData({...formData, status})}
           value={formData.status}
         />
-  
+        <Text style={{ fontSize: 17, marginTop: 30 }}>
+          Ndrysho Kodin
+        </Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Kodi"
+          onChangeText={(password) => setFormData({...formData, password})}
+          value={formData.password}
+          secureTextEntry={true}
+        />
+        <Text style={{ fontSize: 17, marginTop: 30 }}>
+          Verifiko Kodin
+        </Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Verifiko kodin"
+          onChangeText={(password) => setPassword2(password)}
+          value={password2}
+          secureTextEntry={true}
+        />
         <TouchableOpacity
           style={styles.button}
-          onPress={() => dispatch(editUserRequest(navigation, formData))}>
+          onPress={handleSubmit}>
           <Text
             style={{ fontSize: 20,  marginTop: 6 }}>
             {' '}
@@ -109,7 +148,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: 10,
   },
-
   input: {
     backgroundColor: '#FFEBCD',
     opacity: 0.8,
@@ -124,5 +162,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 3,
     borderColor: 'black',
-  },
+  }, image: {
+    width: 100,
+    height: 100,
+    paddingLeft: 35,
+    position: "absolute",
+    left: 100,
+    top: 170
+  }
 });
