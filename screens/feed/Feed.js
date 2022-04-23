@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react'
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import {View, TouchableOpacity, Text, StyleSheet, Modal} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllPostsRequest } from '../../redux/post/PostAction'
+import Popup from '../../components/Popup'
+import { getAllPostsRequest, getPostById } from '../../redux/post/PostAction'
 export default ({ navigation }) => {
   const dispatch = useDispatch()
   const posts = useSelector(state => state.PostReducer.posts)
+  const [popUp, setPopup] = useState(false)
 
   useEffect(() => {
     dispatch(getAllPostsRequest())
@@ -30,7 +32,7 @@ export default ({ navigation }) => {
           Feed{' '}
         </Text>
         {posts.length ? posts.map((post, index) => (
-          <TouchableOpacity key={index}>
+          <TouchableOpacity key={index} onPress={() => dispatch(getPostById(post._id, setPopup))}>
             <Text>{post.body}</Text>
           </TouchableOpacity>
         )) :
@@ -41,6 +43,10 @@ export default ({ navigation }) => {
           onPress={() => navigation.toggleDrawer()}>
           <Text style={styles.navText}> Menu </Text>
         </TouchableOpacity>
+        <Modal animationType="fade" transparent={true} visible={popUp}
+        onRequestClose={() => setPopup(!popUp)}>
+          <Popup setPopup={setPopup}/>
+        </Modal>
       </View>
     );
   }

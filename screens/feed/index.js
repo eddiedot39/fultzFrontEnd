@@ -33,7 +33,7 @@ export default () => {
       )}>
         {isAuthenticated ? (
           <>
-            <Drawer.Screen name="Feed" component={Feed}/>
+            <Drawer.Screen name='Feed' component={Feed}/>
             <Drawer.Screen name="Llogaria ime" component={Profile} />
             <Drawer.Screen name="Ndrysho" component={Settings} />
           </>

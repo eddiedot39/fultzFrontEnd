@@ -8,6 +8,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@expo/vector-icons": "^12.0.0",
     "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-native-community/masked-view": "0.1.10",
@@ -30,6 +32,7 @@
     "react-native-loading-spinner-overlay": "^3.0.0",
     "react-native-material-bottom-navigation": "^1.0.5",
     "react-native-navigation-bar-color": "2.0.1",
+    "react-native-notifier": "^1.7.1",
     "react-native-paper": "^4.0.1",
     "react-native-push-notification": "^8.1.1",
     "react-native-reanimated": "~2.2.0",

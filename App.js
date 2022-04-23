@@ -14,10 +14,8 @@ import rootReducer from './redux/rootReducer';
 import API from './plugins/API';
 import { Show_Loader, Hide_Loader } from './redux/constants';
 import { loadUserRequest } from './redux/auth/AuthAction';
-import { StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-
-
+import { NotifierWrapper } from 'react-native-notifier';
 
 const Tab = createStackNavigator();
 
@@ -53,6 +51,7 @@ const App = () => {
   useEffect(() => dispatch(loadUserRequest()), [])
 
   return (
+    <NotifierWrapper>
       <NavigationContainer>
         <Spinner textContent='Loading' visible={loading} />
         <Tab.Navigator screenOptions={{ headerShown: false }}>
@@ -66,5 +65,6 @@ const App = () => {
           )}
         </Tab.Navigator>
       </NavigationContainer>
+    </NotifierWrapper>
   )
 }

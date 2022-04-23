@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput, ImageBackground,} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {logInRequest } from '../../redux/auth/AuthAction';
 
 export default function Login({ navigation }) {
   const [formData, setFormData] = useState({email: '', password: ''});
   const {email, password} = formData
   const dispatch = useDispatch()
-  const error = useSelector(state => state.AuthReducer.error) 
 
   useEffect(() => {
     return () => setFormData({email: '', password: ''});
@@ -38,7 +37,6 @@ export default function Login({ navigation }) {
               {' '}
               Identifikohu{' '}
             </Text>
-              <Text style={{color: 'white'}}>{error}</Text>
             <TextInput
               style={styles.input}
               placeholder="email"

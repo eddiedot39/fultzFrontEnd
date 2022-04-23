@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import * as ImagePicker from 'expo-image-picker';
-import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { editUserRequest } from '../../redux/auth/AuthAction';
+import { editUserRequest, updateProfilePhotoRequest } from '../../redux/auth/AuthAction';
 import {Button } from 'react-native-paper'
 
 export default ({ navigation }) => {
@@ -13,37 +13,25 @@ export default ({ navigation }) => {
   const [password2, setPassword2] = useState('')
    
   const openImageLibrary = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
-    }
-
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
     if (status === 'granted') {
       const res = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
       });
-
       setFormData({...formData, profilePhoto: res.uri})
-    }
+    } else
+      Alert.alert("Gabim", "Sorry we need camera roll permission", { text: "OK" });
   };
 
-  const uploadImage = async() => {
+  const uploadImage = () => {
     const form = new FormData();
-      form.append('profile', {
-        name: new Date() + '_profile',
-        uri: formData.profilePhoto,
-        type: 'image/jpg',
-      });
-    //api call
-  }
-  
-  const handleSubmit = () => {
-    if(password2 && password2 === formData.password)
-      dispatch(editUserRequest(navigation, formData))
-    else
-      alert('Kodet nuk perputhen')
+    form.append('profile', {
+      name: `${new Date()}_profile`,
+      uri: formData.profilePhoto,
+      type: 'image/jpg',
+    });
+    dispatch(updateProfilePhotoRequest(form, setFormData))
   }
   
     return (
@@ -69,7 +57,7 @@ export default ({ navigation }) => {
           onPress={() => navigation.toggleDrawer()}>
           <Text style={styles.navText}> Menu </Text>
         </TouchableOpacity>
-        <Text style={{ size: 35, color: '#8c5923' }}>
+        <Text style={{ fontSize: 35, color: '#8c5923' }}>
           {' '}
           |----------------------------------------------|{' '}
         </Text>
@@ -78,7 +66,7 @@ export default ({ navigation }) => {
           <Text>Zgjidh foton</Text>
         </TouchableOpacity>
         <Image style={styles.image} source={{ uri: formData.profilePhoto }} />
-        {profilePhoto !== formData.profilePhoto ? <Button>Ndrysho</Button> : null}
+        {profilePhoto !== formData.profilePhoto ? <Button onPress={uploadImage}>Ndrysho</Button> : null}
         <Text style={{ fontSize: 17, marginTop: 30 }}>
           Ndrysho emrin
         </Text>
@@ -130,7 +118,7 @@ export default ({ navigation }) => {
         />
         <TouchableOpacity
           style={styles.button}
-          onPress={handleSubmit}>
+          onPress={() => dispatch(editUserRequest(navigation, formData))}>
           <Text
             style={{ fontSize: 20,  marginTop: 6 }}>
             {' '}
@@ -162,7 +150,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 3,
     borderColor: 'black',
-  }, image: {
+  }, 
+  image: {
     width: 100,
     height: 100,
     paddingLeft: 35,
